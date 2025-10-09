@@ -40,7 +40,7 @@ spring:
             - id: reservas
               uri: http://localhost:8082
               predicates:
-                - Path=/api/reservas/**
+                - Path=/api/booking/**
               filters:
                 - RewritePath=/api/reservas/(?<segment>.*), /${segment}
                 - name: RequestRateLimiter
