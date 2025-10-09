@@ -21,7 +21,7 @@ spring:
               predicates:
                 - Path=/api/itinerarios/**
               filters:
-                - RewritePath=/api/v1/itineraries/(?<segment>.*), /${segment}
+                - RewritePath=/api/itinerary/v1/(?<segment>.*), /${segment}
                 - name: RequestRateLimiter
                   args:
                     redis-rate-limiter.replenishRate: 5

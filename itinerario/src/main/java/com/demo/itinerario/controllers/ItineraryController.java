@@ -17,14 +17,7 @@ public class ItineraryController {
 
     // GET /api/itinerary/v1/search?origin=&destination=&departDate=&returnDate=&adults=&rooms=
     @GetMapping("/search")
-    public ResponseEntity<SearchResponse> searchItineraries(
-            @RequestParam String origin,
-            @RequestParam String destination,
-            @RequestParam String departDate,
-            @RequestParam String returnDate,
-            @RequestParam(required = false, defaultValue = "1") int adults,
-            @RequestParam(required = false, defaultValue = "1") int rooms
-    ) {
+    public ResponseEntity<SearchResponse> searchItineraries() {
         // Hardcodeado: construimos 1 itinerario de ejemplo (similar al doc)
         FlightLeg outbound = new FlightLeg(
                 "IB",
