@@ -56,3 +56,25 @@ spring:
                     prefix: "reservas:"
                 - AddRequestHeader=X-Service-Source, Reservas-Gateway
                 - AddResponseHeader=X-Response-Processed-By, API-Gateway
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,circuitbreakerevents
+  endpoint:
+    health:
+      show-details: always
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      itinerarioCircuitBreaker:
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+      reservaCircuitBreaker:
+        sliding-window-size: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
