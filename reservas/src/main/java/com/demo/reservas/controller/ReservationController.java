@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/booking/v1/reservations")
+@RequestMapping("/api/v1/bookings")
 public class ReservationController {
 
     private final Map<Long, Reservation> reservas = new HashMap<>();
