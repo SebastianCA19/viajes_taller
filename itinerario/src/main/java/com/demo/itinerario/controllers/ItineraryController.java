@@ -12,10 +12,9 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/itinerary/v1", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/v1/itineraries", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ItineraryController {
 
-    // GET /api/itinerary/v1/search?origin=&destination=&departDate=&returnDate=&adults=&rooms=
     @GetMapping("/search")
     public ResponseEntity<SearchResponse> searchItineraries(
             @RequestParam String origin,
@@ -25,7 +24,6 @@ public class ItineraryController {
             @RequestParam(required = false, defaultValue = "1") int adults,
             @RequestParam(required = false, defaultValue = "1") int rooms
     ) {
-        // Hardcodeado: construimos 1 itinerario de ejemplo (similar al doc)
         FlightLeg outbound = new FlightLeg(
                 "IB",
                 "IB6584",
@@ -64,7 +62,6 @@ public class ItineraryController {
         return ResponseEntity.ok(resp);
     }
 
-    // GET /api/itinerary/v1/details/{itineraryId}
     @GetMapping("/details/{itineraryId}")
     public ResponseEntity<Itinerary> getItineraryDetails(@PathVariable("itineraryId") String itineraryId) {
         // Para DEBUG: imprimimos el id en logs (System.out o usa logger)
@@ -94,13 +91,10 @@ public class ItineraryController {
                 4.5
         );
         Money price = new Money("USD", new BigDecimal("1890.50"));
-        // Devolvemos el mismo id que llegó para ver que funciona
         Itinerary iti = new Itinerary(itineraryId, price, flight, hotel);
         return ResponseEntity.ok(iti);
     }
 
-    // POST /api/itinerary/v1/user-itineraries
-    // Simple: devuelve el mismo itinerario recibido (simulación de "guardar")
     @PostMapping(path = "/user-itineraries", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Itinerary> createUserItinerary(@RequestBody Itinerary request) {
         // Hardcode behavior: asignar un id si viene vacío
@@ -128,10 +122,8 @@ public class ItineraryController {
         }
     }
 
-    // DELETE /api/itinerary/v1/user-itineraries/{id}
     @DeleteMapping("/user-itineraries/{id}")
     public ResponseEntity<Void> deleteUserItinerary(@PathVariable String id) {
-        // Hardcode: siempre retornamos 204 (simulación)
         return ResponseEntity.noContent().build();
     }
 }
