@@ -28,10 +28,11 @@ spring:
           filters:
             - RewritePath=/api/itinerarios/(?<segment>.*), /api/itinerary/v1/${segment}
             # desactiva temporalmente el rate limiter si quieres aislar problemas
-            #- name: RequestRateLimiter
-            #  args:
-            #    redis-rate-limiter.replenishRate: 5
-            #    redis-rate-limiter.burstCapacity: 5
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 5
             - name: CircuitBreaker
               args:
                 name: itinerarioCircuitBreaker
@@ -40,8 +41,8 @@ spring:
               args:
                 prefix: "itinerarios:"
             # headers comentados para debug
-            # - AddRequestHeader=X-Service-Source, Itinerarios-Gateway
-            # - AddResponseHeader=X-Response-Processed-By, API-Gateway
+            - AddRequestHeader=X-Service-Source, Itinerarios-Gateway
+            - AddResponseHeader=X-Response-Processed-By, API-Gateway
 
         - id: reservas
           uri: http://localhost:8082
