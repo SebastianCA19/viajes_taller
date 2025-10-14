@@ -12,7 +12,14 @@ public class ReservationController {
     private final Map<Long, Reservation> reservas = new HashMap<>();
     private Long idCounter = 1L;
 
-    // POST -> Crear reserva de hotel o vuelo
+    // Constructor -> inicializa reservas por defecto
+    public ReservationController() {
+        reservas.put(idCounter, new Reservation(idCounter++, "hotel", "Vladimir Navarro", "Bogotá", "2025-10-15", "confirmada"));
+        reservas.put(idCounter, new Reservation(idCounter++, "vuelo", "Ana Pérez", "Medellín", "2025-11-02", "pendiente"));
+        reservas.put(idCounter, new Reservation(idCounter++, "hotel", "Carlos Ruiz", "Cartagena", "2025-09-25", "cancelada"));
+    }
+
+    // POST -> Crear reserva
     @PostMapping
     public Reservation crearReserva(@RequestBody Reservation nuevaReserva) {
         nuevaReserva.setId(idCounter++);
@@ -29,5 +36,11 @@ public class ReservationController {
             return new Reservation(id, "desconocido", "N/A", "N/A", "N/A", "no encontrada");
         }
         return r;
+    }
+
+    // GET -> Listar todas las reservas
+    @GetMapping
+    public Collection<Reservation> obtenerTodasLasReservas() {
+        return reservas.values();
     }
 }
