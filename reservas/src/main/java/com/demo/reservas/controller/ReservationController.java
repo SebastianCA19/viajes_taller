@@ -10,7 +10,7 @@ import java.util.*;
 public class ReservationController {
 
     private final Map<Long, Reservation> reservas = new HashMap<>();
-    private Long idCounter = 1L;
+    private Long idCounter = (Long) 1L;
 
     // Constructor -> inicializa reservas por defecto
     public ReservationController() {
