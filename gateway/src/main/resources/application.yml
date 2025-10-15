@@ -1,33 +1,21 @@
-server:
-  port: 8080
-
-logging:
-  level:
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.data.redis: DEBUG
-    reactor.netty.http.server: DEBUG
-
 spring:
   application:
     name: api-gateway
 
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
 
   cloud:
     gateway:
-      # rutas en la ubicación estándar: spring.cloud.gateway.routes
       routes:
         - id: itinerarios
-          uri: http://localhost:8081
+          uri: http://itinerario:8081   # 🔥 Aquí el cambio
           predicates:
             - Path=/api/itinerarios/**
           filters:
             - RewritePath=/api/itinerarios(?<segment>/?.*), /api/itinerary/v1/${segment}
-            # desactiva temporalmente el rate limiter si quieres aislar problemas
             - name: RequestRateLimiter
               args:
                 key-resolver: "#{@ipKeyResolver}"
@@ -40,12 +28,11 @@ spring:
             - name: CacheResponse
               args:
                 prefix: "itinerarios:"
-            # headers comentados para debug
             - AddRequestHeader=X-Service-Source, Itinerarios-Gateway
             - AddResponseHeader=X-Response-Processed-By, API-Gateway
 
         - id: reservas
-          uri: http://localhost:8082
+          uri: http://reservas:8082     # 🔥 Aquí también
           predicates:
             - Path=/api/reservas/**
           filters:
@@ -64,27 +51,3 @@ spring:
                 prefix: "reservas:"
             - AddRequestHeader=X-Service-Source, Reservas-Gateway
             - AddResponseHeader=X-Response-Processed-By, API-Gateway
-
-management:
-  health:
-    circuitbreakers:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: health,info,circuitbreakerevents
-  endpoint:
-    health:
-      show-details: always
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      itinerarioCircuitBreaker:
-        sliding-window-size: 5
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10s
-      reservaCircuitBreaker:
-        sliding-window-size: 5
-        failure-rate-threshold: 50
-        wait-duration-in-open-state: 10s
