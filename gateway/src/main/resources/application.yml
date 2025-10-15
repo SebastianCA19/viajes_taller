@@ -26,7 +26,7 @@ spring:
           predicates:
             - Path=/api/itinerarios/**
           filters:
-            - RewritePath=/api/itinerarios/(?<segment>.*), /api/itinerary/v1/${segment}
+            - RewritePath=/api/itinerarios(?<segment>/?.*), /api/itinerary/v1/${segment}
             # desactiva temporalmente el rate limiter si quieres aislar problemas
             - name: RequestRateLimiter
               args:
@@ -49,8 +49,12 @@ spring:
           predicates:
             - Path=/api/reservas/**
           filters:
-            - RewritePath=/api/reservas/(?<segment>.*), /api/v1/bookings/${segment}
-            # - name: RequestRateLimiter ...
+            - RewritePath=/api/reservas(?<segment>/?.*), /api/v1/bookings${segment}
+            - name: RequestRateLimiter
+              args:
+                key-resolver: "#{@ipKeyResolver}"
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 5
             - name: CircuitBreaker
               args:
                 name: reservaCircuitBreaker
@@ -62,6 +66,9 @@ spring:
             - AddResponseHeader=X-Response-Processed-By, API-Gateway
 
 management:
+  health:
+    circuitbreakers:
+      enabled: true
   endpoints:
     web:
       exposure:
